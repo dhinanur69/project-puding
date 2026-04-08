@@ -1,0 +1,141 @@
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 70px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.hero {
+    height: 399px;
+    background-image: url('../assets/background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.dashboard-card {
+    transition: 0.3s;
+}
+
+.dashboard-card:hover {
+    transform: scale(1.05);
+}
+
+footer {
+    margin-top: 50px;
+}
+
+body.dark-mode {
+    background-color: #121212;
+    color: #f0f0f0;
+}
+
+body.dark-mode .navbar {
+    background-color: #1a1a2e !important;
+}
+
+body.dark-mode .card {
+    background-color: #1e1e1e;
+    border-color: #333;
+    color: #f0f0f0;
+}
+
+body.dark-mode .modal-content {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+}
+
+body.dark-mode .modal-header {
+    border-bottom-color: #333;
+}
+
+body.dark-mode .modal-footer {
+    border-top-color: #333;
+}
+
+body.dark-mode .list-group-item {
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+    border-color: #444;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+    border-color: #555;
+}
+
+body.dark-mode .form-control::placeholder {
+    color: #aaa;
+}
+
+body.dark-mode footer {
+    background-color: #0d0d0d !important;
+}
+
+.login-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e39c51, #c5a2a2);
+}
+
+.login-card {
+    background-color: #d7922a;
+    padding: 35px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 15px 35px rgba(69, 26, 6, 0.5);
+    border: 1px solid #fbf8f8;
+}
+
+.login-card h3 {
+    color: #f0f0f0;
+    font-weight: bold;
+}
+
+.login-card .form-control {
+    background-color: #f7f6f6;
+    border: 1px solid #ffffff;
+    color: #1c1111;
+}
+
+.login-card .form-label {
+    color: #f8f8f8;
+}
+
+.login-card .form-control::placeholder {
+    color: #f4eded;
+}
+
+.btn-login {
+    background-color: #d0bbc8;
+    border: none;
+    color: #fffcfc;
+    font-weight: bold;
+    padding: 10px;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #c19a71;
+    transform: translateY(-2px);
+}
+
+.back-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.login-card .form-check-label {
+    color: #ffffff; 
+}
