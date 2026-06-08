@@ -24,7 +24,12 @@
                 <button id="btn-theme" class="btn btn-outline-light btn-sm">
                     Mode Gelap
                 </button>
-                    <a href="{{ route('logout') }}" class="btn btn-danger">Logout</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">
+                            Logout
+                        </button>
+                    </form>
             </div>
         </div>
     </nav>
@@ -65,45 +70,98 @@
         </div>
     </div>
 
-    <div class="container mt-5" id="daftar-puding">
-    <h3 class="mb-4">Daftar Puding</h3>
-    <div class="row" id="container-barang"> <div class="col-md-4 mb-4">
+    <div class="container mt-4">
+        <div class="row" id="container-barang">
+
+        @foreach($products as $product)
+        <div class="col-md-4 mb-4">
             <div class="card h-100">
-                <img src="{{ asset('assets/CARAMEL.jpg') }}" class="card-img-top" alt="puding"/>
+
+                @if($product->gambar)
+                    <img src="{{ asset('storage/' . $product->gambar) }}"
+                        class="card-img-top"
+                        style="height:250px; object-fit:cover;">
+                @endif
+
                 <div class="card-body">
-                    <h5 class="card-title">Caramel</h5>
-                    <p class="card-text">Harga: Rp 499.000</p>
-                    <p class="card-text">Stok: 10</p>
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-primary w-50 me-2">Beli</button>
-                        <button class="btn btn-outline-danger w-50">❤️ Wishlist</button>
+
+                    <h5>{{ $product->nama_produk }}</h5>
+
+                    <p>Rp {{ number_format($product->harga,0,',','.') }}</p>
+
+                    <p>Kategori: {{ $product->category->nama_category }}</p>
+                    <p>Brand: {{ $product->brand->nama_brand }}</p>
+
+                    <div class="d-flex gap-2 mb-2">
+                        <button class="btn btn-warning btn-sm edit-btn"
+                                data-id="{{ $product->id }}">
+                            Edit
+                        </button>
+
+                        <form action="{{ route('products.destroy', $product->id) }}"
+                            method="POST">
+                            @csrf
+                            @method('DELETE')
+
+                            <button class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin hapus?')">
+                                Delete
+                            </button>
+                        </form>
                     </div>
-                </div> </div> </div> <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <img src="{{ asset('assets/CHOCOLATE.jpg') }}" class="card-img-top" alt="puding"/>
-                <div class="card-body">
-                    <h5 class="card-title">Chocolate</h5>
-                    <p class="card-text">Harga: Rp 420.000</p>
-                    <p class="card-text">Stok: 7</p>
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-primary w-50 me-2">Beli</button>
-                        <button class="btn btn-outline-danger w-50">❤️ Wishlist</button>
+
+                    <!-- FORM EDIT -->
+                    <div id="edit-form-{{ $product->id }}"
+                        style="display:none;">
+
+                        <form method="POST"
+                            action="{{ route('products.update', $product->id) }}"
+                            enctype="multipart/form-data">
+
+                            @csrf
+                            @method('PUT')
+
+                            <input type="text" name="nama_produk"
+                                value="{{ $product->nama_produk }}"
+                                class="form-control mb-2">
+
+                            <input type="number" name="harga"
+                                value="{{ $product->harga }}"
+                                class="form-control mb-2">
+
+                            <select name="category_id" class="form-control mb-2">
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}"
+                                        {{ $product->category_id == $category->id ? 'selected' : '' }}>
+                                        {{ $category->nama_category }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            <select name="brand_id" class="form-control mb-2">
+                                @foreach($brands as $brand)
+                                    <option value="{{ $brand->brand_id }}"
+                                        {{ $product->brand_id == $brand->brand_id ? 'selected' : '' }}>
+                                        {{ $brand->nama_brand }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            <input type="file" name="gambar" class="form-control mb-2">
+
+                            <button class="btn btn-success btn-sm">
+                                Update
+                            </button>
+
+                        </form>
                     </div>
-                </div> </div> </div> <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <img src="{{ asset('assets/COCONAT.jpg') }}" class="card-img-top" alt="puding"/>
-                <div class="card-body">
-                    <h5 class="card-title">Coconat</h5>
-                    <p class="card-text">Harga: Rp 329.000</p>
-                    <p class="card-text">Stok: 10</p>
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-primary w-50 me-2">Beli</button>
-                        <button class="btn btn-outline-danger w-50">❤️ Wishlist</button>
-                    </div>
-                </div> 
-            </div> 
-        </div> 
-    </div> 
+
+                </div>
+            </div>
+        </div>
+        @endforeach
+
+    </div>
 </div>
 
     <div class="modal fade" id="wishlistModal" tabindex="-1" aria-hidden="true">
@@ -128,28 +186,70 @@
     <div class="container mt-5 mb-5" id="form-pesanan">
         <h3 class="mb-4">Tambah Pesanan</h3>
         <div class="card p-4">
-            <form>
+            <form method="POST"
+                action="{{ route('products.store') }}"
+                enctype="multipart/form-data">
+
+                @csrf
+
                 <div class="mb-3">
-                    <label class="form-label">Nama Produk</label>
-                    <input type="text" class="form-control" placeholder="Masukkan rasa puding" />
+                    <label>Nama Produk</label>
+                    <input type="text"
+                        name="nama_produk"
+                        class="form-control">
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label">Harga</label>
-                    <input type="number" class="form-control" placeholder="Masukkan harga" />
-                </div>
+                <label>Harga</label>
+                <input type="number"
+                    name="harga"
+                    class="form-control"
+                    placeholder="Contoh: 10000">
+            </div>
+
                 <div class="mb-3">
-                   
-                <label class="form-label">Stok</label>
-                    <input type="number" class="form-control" placeholder="Masukkan Stok" />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Kategori</label>
-                    <select class="form-select">
-                        <option>Dingin</option>
-                        <option>Panas</option>
+                    <label>Kategori</label>
+
+                    <select name="category_id"
+                            class="form-control">
+
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">
+                                {{ $category->nama_category }}
+                            </option>
+                        @endforeach
+
                     </select>
                 </div>
-                <button type="submit" class="btn btn-success">Simpan</button>
+
+                <div class="mb-3">
+                    <label>Brand</label>
+
+                    <select name="brand_id"
+                            class="form-control">
+
+                        @foreach($brands as $brand)
+                            <option value="{{ $brand->brand_id }}">
+                                {{ $brand->nama_brand }}
+                            </option>
+                        @endforeach
+
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Gambar Produk</label>
+
+                    <input type="file"
+                        name="gambar"
+                        class="form-control">
+                </div>
+
+                <button type="submit"
+                        class="btn btn-success">
+                    Simpan
+                </button>
+
             </form>
         </div>
     </div>
@@ -160,6 +260,20 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/script.js') }}"></script>
+    <script>
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                let id = this.getAttribute('data-id');
 
+                let form = document.getElementById('edit-form-' + id);
+
+                if (form.style.display === 'none') {
+                    form.style.display = 'block';
+                } else {
+                    form.style.display = 'none';
+                }
+            });
+        });
+    </script>   
 </body>
 </html>

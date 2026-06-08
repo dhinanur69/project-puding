@@ -1,0 +1,25 @@
+body {
+    background-color: #f5f5f5;
+}
+
+.card {
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+.btn-warning {
+    background-color: orange;
+    border: none;
+}
+
+.btn-danger {
+    background-color: crimson;
+}
+
+h3 {
+    font-weight: bold;
+}
